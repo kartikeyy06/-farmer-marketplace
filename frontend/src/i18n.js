@@ -143,6 +143,36 @@ const resources = {
       reviews: 'reviews',
       availability: 'Availability',
 
+      // Orders
+      myOrders: 'My Orders',
+      noOrders: 'No orders yet',
+      noOrdersYet: 'Orders will appear here when customers place them',
+      noOrdersStatus: 'No orders with this status',
+      startShopping: 'Start shopping to place your first order',
+      orderPlacedSuccess: 'Order placed successfully!',
+      orderPlaceFailed: 'Failed to place order',
+      orderStatusUpdated: 'Order status updated',
+      confirmOrder: 'Confirm Order',
+      markReady: 'Mark Ready for Pickup/Delivery',
+      markCompleted: 'Mark Completed',
+      cancelReasonPrompt: 'Please provide a reason for cancellation:',
+      yourEarnings: 'Your Earnings',
+      active: 'Active',
+      orderTimeline: 'Order Timeline',
+
+      // Checkout
+      checkout: 'Checkout',
+      deliveryInformation: 'Delivery Information',
+      noAddressWarning: 'Please add your address to proceed with checkout',
+      addAddressNow: 'Add address now',
+      deliveryDescription: 'Products will be delivered to your address',
+      pickupDescription: 'You will pick up products from the farm',
+      orderNotes: 'Order Notes (Optional)',
+      orderNotesPlaceholder: 'Special instructions for the farmer...',
+      placeOrder: 'Place Order',
+      paymentNote: 'Payment on delivery/pickup',
+      notes: 'Notes',
+
       // Units
       kg: 'kg',
       lb: 'lb',
@@ -302,6 +332,36 @@ const resources = {
       farmerName: 'किसान',
       reviews: 'समीक्षाएं',
       availability: 'उपलब्धता',
+
+      // Orders
+      myOrders: 'मेरे ऑर्डर',
+      noOrders: 'अभी तक कोई ऑर्डर नहीं',
+      noOrdersYet: 'जब ग्राहक ऑर्डर देंगे तो यहां दिखाई देंगे',
+      noOrdersStatus: 'इस स्थिति के साथ कोई ऑर्डर नहीं',
+      startShopping: 'अपना पहला ऑर्डर देने के लिए खरीदारी शुरू करें',
+      orderPlacedSuccess: 'ऑर्डर सफलतापूर्वक दिया गया!',
+      orderPlaceFailed: 'ऑर्डर देने में विफल',
+      orderStatusUpdated: 'ऑर्डर की स्थिति अपडेट की गई',
+      confirmOrder: 'ऑर्डर की पुष्टि करें',
+      markReady: 'पिकअप/डिलीवरी के लिए तैयार चिह्नित करें',
+      markCompleted: 'पूर्ण चिह्नित करें',
+      cancelReasonPrompt: 'कृपया रद्द करने का कारण बताएं:',
+      yourEarnings: 'आपकी कमाई',
+      active: 'सक्रिय',
+      orderTimeline: 'ऑर्डर टाइमलाइन',
+
+      // Checkout
+      checkout: 'चेकआउट',
+      deliveryInformation: 'डिलीवरी जानकारी',
+      noAddressWarning: 'कृपया चेकआउट के लिए अपना पता जोड़ें',
+      addAddressNow: 'अभी पता जोड़ें',
+      deliveryDescription: 'उत्पाद आपके पते पर पहुंचाए जाएंगे',
+      pickupDescription: 'आप खेत से उत्पाद उठाएंगे',
+      orderNotes: 'ऑर्डर नोट्स (वैकल्पिक)',
+      orderNotesPlaceholder: 'किसान के लिए विशेष निर्देश...',
+      placeOrder: 'ऑर्डर दें',
+      paymentNote: 'डिलीवरी/पिकअप पर भुगतान',
+      notes: 'नोट्स',
 
       // Units
       kg: 'किलो',

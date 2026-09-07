@@ -138,24 +138,46 @@ farmer-marketplace/
 │   │   │   ├── schema.sql        # Database schema
 │   │   │   └── migrate.js        # Migration runner
 │   │   ├── routes/
-│   │   │   └── auth.js           # Auth endpoints
+│   │   │   ├── auth.js           # Auth endpoints
+│   │   │   ├── farmer.js         # Farmer profile
+│   │   │   ├── products.js       # Product CRUD
+│   │   │   ├── consumer.js       # Consumer profile
+│   │   │   ├── marketplace.js    # Marketplace browsing
+│   │   │   └── orders.js         # Order management
 │   │   ├── middleware/
 │   │   │   └── auth.js           # JWT middleware
 │   │   ├── utils/
-│   │   │   └── otp.js            # OTP generation/verification
+│   │   │   ├── otp.js            # OTP generation/verification
+│   │   │   └── notifications.js  # Email/SMS notifications
 │   │   └── index.js              # Express server
 │   ├── package.json
 │   └── .env.example
 ├── frontend/
 │   ├── src/
 │   │   ├── components/
-│   │   │   └── ProtectedRoute.jsx
+│   │   │   ├── ProtectedRoute.jsx
+│   │   │   └── DashboardLayout.jsx
 │   │   ├── contexts/
-│   │   │   └── AuthContext.jsx   # Auth state management
+│   │   │   ├── AuthContext.jsx
+│   │   │   └── CartContext.jsx
 │   │   ├── pages/
-│   │   │   └── Login.jsx         # OTP login flow
+│   │   │   ├── Login.jsx
+│   │   │   ├── farmer/
+│   │   │   │   ├── Dashboard.jsx
+│   │   │   │   ├── Profile.jsx
+│   │   │   │   ├── ProductsList.jsx
+│   │   │   │   ├── ProductForm.jsx
+│   │   │   │   └── Orders.jsx
+│   │   │   └── consumer/
+│   │   │       ├── Marketplace.jsx
+│   │   │       ├── ProductDetail.jsx
+│   │   │       ├── Cart.jsx
+│   │   │       ├── Checkout.jsx
+│   │   │       ├── Orders.jsx
+│   │   │       └── OrderDetail.jsx
 │   │   ├── services/
-│   │   │   └── api.js            # API client
+│   │   │   ├── apiClient.js
+│   │   │   └── api.js
 │   │   ├── App.jsx               # Root component
 │   │   ├── i18n.js               # i18next config
 │   │   └── main.jsx
@@ -185,13 +207,34 @@ farmer-marketplace/
 - `POST /api/auth/verify-otp` - Verify OTP and login/register
 - `GET /api/auth/me` - Get current user
 
-### Coming in Phase 2+
-- Farmer profile and product management
-- Consumer marketplace browsing
-- Order creation and management
-- Stripe Connect onboarding
-- Payment processing
-- Reviews
+### Farmer (Phase 2)
+- `GET /api/farmer/profile` - Get farmer profile
+- `PUT /api/farmer/profile` - Update profile
+
+### Products (Phase 2)
+- `GET /api/products` - List farmer's products
+- `GET /api/products/:id` - Get product details
+- `POST /api/products` - Create product
+- `PUT /api/products/:id` - Update product
+- `DELETE /api/products/:id` - Delete product
+- `GET /api/products/categories/all` - Get categories
+
+### Consumer (Phase 3)
+- `GET /api/consumer/profile` - Get consumer profile
+- `PUT /api/consumer/profile` - Update profile
+
+### Marketplace (Phase 3)
+- `GET /api/marketplace` - Browse products (with filters)
+  - Query params: `search`, `category_id`, `is_organic`, `min_price`, `max_price`, `latitude`, `longitude`, `max_distance_km`, `sort`, `order`
+- `GET /api/marketplace/:id` - Get product detail with farmer info
+- `GET /api/marketplace/farmer/:farmerId` - Get farmer's products
+
+### Orders (Phase 4)
+- `POST /api/orders` - Create order from cart items
+- `GET /api/orders/consumer` - Get consumer's orders
+- `GET /api/orders/farmer` - Get farmer's incoming orders
+- `GET /api/orders/:id` - Get order detail
+- `PATCH /api/orders/:id/status` - Update order status
 
 ## 🏗 Build Phases
 
@@ -211,24 +254,23 @@ farmer-marketplace/
 - [x] Category management (bilingual)
 - [x] Delivery radius configuration
 - [x] Active/inactive product status
-- [x] Orders page (placeholder)
 
-### ✅ Phase 3: Consumer Marketplace (CORE COMPLETE)
+### ✅ Phase 3: Consumer Marketplace (COMPLETE)
 - [x] Browse products with filters
 - [x] Search and advanced filtering
 - [x] Product detail pages
 - [x] Shopping cart with persistence
 - [x] Platform fee calculation (10%)
-- [ ] Photo upload for products (optional)
-- [ ] Mapbox integration (optional)
-- [ ] Consumer profile page (optional)
 
-### 🔄 Phase 4: Orders (NEXT)
-- [ ] Checkout flow
-- [ ] Order creation and management
-- [ ] Order status tracking
-- [ ] Email/SMS notifications
-- [ ] Order history
+### ✅ Phase 4: Orders & Checkout (COMPLETE)
+- [x] Checkout flow with fulfillment type selection
+- [x] Order creation with multi-farmer support
+- [x] Stock validation and reduction
+- [x] Order status tracking (placed → confirmed → ready → completed)
+- [x] Farmer order management with status actions
+- [x] Consumer order history with filters
+- [x] Order detail page with status timeline
+- [x] Email/SMS notifications (console in dev mode)
 
 ### 📅 Phase 5: Payments
 - [ ] Stripe Connect farmer onboarding
@@ -274,6 +316,12 @@ Farmers can toggle language in settings. Product names/descriptions can be enter
 - Platform fee breakdown (10%)
 - Responsive design
 
+### Orders & Checkout (Phase 4)
+- Checkout with delivery/pickup selection
+- Order history with status filters
+- Order detail with timeline tracking
+- Farmer order management with actions
+
 ## 🧪 Testing
 
 ### Test as Farmer
@@ -294,35 +342,8 @@ Farmers can toggle language in settings. Product names/descriptions can be enter
 6. Add items to cart
 7. Update quantities
 8. View order summary
-
-## 📊 API Endpoints
-
-### Authentication
-- `POST /api/auth/request-otp` - Send OTP
-- `POST /api/auth/verify-otp` - Verify OTP and login/register
-- `GET /api/auth/me` - Get current user
-
-### Farmer (Phase 2)
-- `GET /api/farmer/profile` - Get farmer profile
-- `PUT /api/farmer/profile` - Update profile
-
-### Products (Phase 2)
-- `GET /api/products` - List farmer's products
-- `GET /api/products/:id` - Get product details
-- `POST /api/products` - Create product
-- `PUT /api/products/:id` - Update product
-- `DELETE /api/products/:id` - Delete product
-- `GET /api/products/categories/all` - Get categories
-
-### Consumer (Phase 3)
-- `GET /api/consumer/profile` - Get consumer profile
-- `PUT /api/consumer/profile` - Update profile
-
-### Marketplace (Phase 3)
-- `GET /api/marketplace` - Browse products (with filters)
-  - Query params: `search`, `category_id`, `is_organic`, `min_price`, `max_price`, `latitude`, `longitude`, `max_distance_km`, `sort`, `order`
-- `GET /api/marketplace/:id` - Get product detail with farmer info
-- `GET /api/marketplace/farmer/:farmerId` - Get farmer's products
+9. Proceed to checkout
+10. Place order and view in order history
 
 ## 📝 License
 
@@ -334,6 +355,6 @@ Contributions welcome! This is a learning/demo project.
 
 ---
 
-**Current Status:** Phase 3 Core Complete ✅  
-**Next:** Phase 4 - Orders & Checkout  
-**Last Updated:** 2026-09-07
+**Current Status:** Phase 4 Complete ✅
+**Next:** Phase 5 - Stripe Connect Payments
+**Last Updated:** 2026-09-06

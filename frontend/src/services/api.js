@@ -37,4 +37,13 @@ export const marketplaceAPI = {
   getFarmerProducts: (farmerId) => api.get(`/marketplace/farmer/${farmerId}`),
 };
 
+// Orders API
+export const ordersAPI = {
+  create: (data) => api.post('/orders', data),
+  getConsumerOrders: () => api.get('/orders/consumer'),
+  getFarmerOrders: () => api.get('/orders/farmer'),
+  getOrderById: (id) => api.get(`/orders/${id}`),
+  updateStatus: (id, data) => api.patch(`/orders/${id}/status`, data),
+};
+
 export default api;

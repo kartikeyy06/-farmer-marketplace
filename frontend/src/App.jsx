@@ -11,6 +11,9 @@ import FarmerOrders from './pages/farmer/Orders';
 import Marketplace from './pages/consumer/Marketplace';
 import ProductDetail from './pages/consumer/ProductDetail';
 import Cart from './pages/consumer/Cart';
+import Checkout from './pages/consumer/Checkout';
+import ConsumerOrders from './pages/consumer/Orders';
+import ConsumerOrderDetail from './pages/consumer/OrderDetail';
 import './i18n';
 import './index.css';
 
@@ -119,7 +122,23 @@ export default function App() {
               path="/checkout"
               element={
                 <ProtectedRoute allowedRoles={['consumer']}>
-                  <div className="p-8 text-center">Checkout (Phase 4)</div>
+                  <Checkout />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/consumer/orders"
+              element={
+                <ProtectedRoute allowedRoles={['consumer']}>
+                  <ConsumerOrders />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/consumer/orders/:id"
+              element={
+                <ProtectedRoute allowedRoles={['consumer']}>
+                  <ConsumerOrderDetail />
                 </ProtectedRoute>
               }
             />

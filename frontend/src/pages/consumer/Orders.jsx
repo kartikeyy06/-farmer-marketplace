@@ -1,13 +1,16 @@
 import { useState, useEffect } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import DashboardLayout from '../../components/DashboardLayout';
 import { ordersAPI } from '../../services/api';
+import { useAuth } from '../../contexts/AuthContext';
 
-export default function FarmerOrders() {
+export default function ConsumerOrders() {
   const { t } = useTranslation();
+  const navigate = useNavigate();
+  const { logout } = useAuth();
   const [orders, setOrders] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [filter, setFilter] = useState('all');
+  const [filter, setFilter] = useState('all'); // all, placed, confirmed, ready, completed, cancelled
 
   useEffect(() => {
     loadOrders();
@@ -15,7 +18,7 @@ export default function FarmerOrders() {
 
   const loadOrders = async () => {
     try {
-      const { data } = await ordersAPI.getFarmerOrders();
+      const { data } = await ordersAPI.getConsumerOrders();
       setOrders(data.orders || []);
     } catch (error) {
       console.error('Failed to load orders:', error);
@@ -24,30 +27,9 @@ export default function FarmerOrders() {
     }
   };
 
-  const handleStatusUpdate = async (orderId, newStatus, reason = null) => {
-    try {
-      await ordersAPI.updateStatus(orderId, {
-        status: newStatus,
-        cancelled_reason: reason
-      });
-
-      // Update local state
-      setOrders(orders.map(order =>
-        order.id === orderId ? { ...order, status: newStatus } : order
-      ));
-
-      alert(t('orderStatusUpdated'));
-    } catch (error) {
-      console.error('Failed to update order:', error);
-      alert(error.response?.data?.error || t('error'));
-    }
-  };
-
-  const handleCancel = (orderId) => {
-    const reason = prompt(t('cancelReasonPrompt'));
-    if (reason) {
-      handleStatusUpdate(orderId, 'cancelled', reason);
-    }
+  const handleLogout = () => {
+    logout();
+    navigate('/login');
   };
 
   const getStatusColor = (status) => {
@@ -63,31 +45,47 @@ export default function FarmerOrders() {
 
   const filteredOrders = orders.filter(order => {
     if (filter === 'all') return true;
-    if (filter === 'active') return ['placed', 'confirmed', 'ready'].includes(order.status);
     return order.status === filter;
   });
 
   if (loading) {
     return (
-      <DashboardLayout>
-        <div className="text-center py-12">{t('loading')}</div>
-      </DashboardLayout>
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+        <div>{t('loading')}</div>
+      </div>
     );
   }
 
   return (
-    <DashboardLayout>
-      <div className="space-y-6">
-        <div>
-          <h2 className="text-3xl font-bold text-gray-900">{t('orders')}</h2>
-          <p className="mt-1 text-sm text-gray-600">
-            {t('manageIncomingOrders')}
-          </p>
-        </div>
+    <div className="min-h-screen bg-gray-50">
+      {/* Header */}
+      <header className="bg-white shadow-sm border-b sticky top-0 z-10">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex justify-between items-center h-16">
+            <h1 className="text-2xl font-bold text-green-600">📦 {t('myOrders')}</h1>
 
+            <div className="flex items-center gap-4">
+              <Link to="/marketplace" className="text-gray-700 hover:text-green-600">
+                🌾 {t('marketplace')}
+              </Link>
+              <Link to="/cart" className="text-gray-700 hover:text-green-600">
+                🛒 {t('cart')}
+              </Link>
+              <Link to="/consumer/profile" className="text-gray-700 hover:text-green-600">
+                👤 {t('profile')}
+              </Link>
+              <button onClick={handleLogout} className="text-gray-700 hover:text-red-600">
+                {t('logout')}
+              </button>
+            </div>
+          </div>
+        </div>
+      </header>
+
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Filters */}
-        <div className="flex gap-2 overflow-x-auto pb-2">
-          {['all', 'active', 'placed', 'confirmed', 'ready', 'completed', 'cancelled'].map((status) => (
+        <div className="mb-6 flex gap-2 overflow-x-auto pb-2">
+          {['all', 'placed', 'confirmed', 'ready', 'completed', 'cancelled'].map((status) => (
             <button
               key={status}
               onClick={() => setFilter(status)}
@@ -97,7 +95,7 @@ export default function FarmerOrders() {
                   : 'bg-white text-gray-700 border hover:bg-gray-50'
               }`}
             >
-              {status === 'all' ? t('all') : status === 'active' ? t('active') : t(status)}
+              {status === 'all' ? t('all') : t(status)}
             </button>
           ))}
         </div>
@@ -107,23 +105,31 @@ export default function FarmerOrders() {
           <div className="bg-white rounded-lg shadow p-12 text-center">
             <div className="text-6xl mb-4">📦</div>
             <h3 className="text-xl font-semibold text-gray-900 mb-2">
-              {t('noOrders')}
+              {filter === 'all' ? t('noOrders') : t('noOrdersStatus')}
             </h3>
-            <p className="text-gray-600">
-              {filter === 'all' ? t('noOrdersYet') : t('noOrdersStatus')}
-            </p>
+            <p className="text-gray-600 mb-6">{t('startShopping')}</p>
+            <Link
+              to="/marketplace"
+              className="inline-block px-6 py-3 bg-green-600 text-white rounded-lg font-semibold hover:bg-green-700 transition"
+            >
+              {t('browseProducts')}
+            </Link>
           </div>
         ) : (
           <div className="space-y-4">
             {filteredOrders.map((order) => (
-              <div key={order.id} className="bg-white rounded-lg shadow p-6">
+              <div
+                key={order.id}
+                onClick={() => navigate(`/consumer/orders/${order.id}`)}
+                className="bg-white rounded-lg shadow hover:shadow-md transition p-6 cursor-pointer"
+              >
                 <div className="flex justify-between items-start mb-4">
                   <div>
                     <h3 className="text-lg font-semibold">
                       {t('orderNumber')}: {order.order_number}
                     </h3>
                     <p className="text-sm text-gray-600">
-                      👤 {order.consumer_name}
+                      🧑‍🌾 {order.farm_name}
                     </p>
                     <p className="text-sm text-gray-600">
                       {new Date(order.created_at).toLocaleDateString()} • {order.fulfillment_type === 'delivery' ? '🚚' : '🏪'} {t(order.fulfillment_type)}
@@ -151,10 +157,10 @@ export default function FarmerOrders() {
                 {/* Total */}
                 <div className="flex justify-between items-center pt-4 border-t">
                   <div className="text-sm text-gray-600">
-                    {t('yourEarnings')}: ₹{order.subtotal}
+                    {t('subtotal')}: ₹{order.subtotal} + {t('platformFee')}: ₹{order.platform_fee}
                   </div>
                   <div className="text-xl font-bold text-green-600">
-                    {t('total')}: ₹{order.total}
+                    ₹{order.total}
                   </div>
                 </div>
 
@@ -165,51 +171,11 @@ export default function FarmerOrders() {
                     </p>
                   </div>
                 )}
-
-                {/* Actions */}
-                {order.status === 'placed' && (
-                  <div className="mt-4 pt-4 border-t flex gap-2">
-                    <button
-                      onClick={() => handleStatusUpdate(order.id, 'confirmed')}
-                      className="flex-1 px-4 py-2 bg-green-600 text-white rounded-lg font-semibold hover:bg-green-700 transition"
-                    >
-                      ✓ {t('confirmOrder')}
-                    </button>
-                    <button
-                      onClick={() => handleCancel(order.id)}
-                      className="px-4 py-2 bg-red-50 text-red-700 rounded-lg font-semibold hover:bg-red-100 transition"
-                    >
-                      ✗ {t('cancel')}
-                    </button>
-                  </div>
-                )}
-
-                {order.status === 'confirmed' && (
-                  <div className="mt-4 pt-4 border-t flex gap-2">
-                    <button
-                      onClick={() => handleStatusUpdate(order.id, 'ready')}
-                      className="flex-1 px-4 py-2 bg-purple-600 text-white rounded-lg font-semibold hover:bg-purple-700 transition"
-                    >
-                      📦 {t('markReady')}
-                    </button>
-                  </div>
-                )}
-
-                {order.status === 'ready' && (
-                  <div className="mt-4 pt-4 border-t flex gap-2">
-                    <button
-                      onClick={() => handleStatusUpdate(order.id, 'completed')}
-                      className="flex-1 px-4 py-2 bg-gray-600 text-white rounded-lg font-semibold hover:bg-gray-700 transition"
-                    >
-                      ✓ {t('markCompleted')}
-                    </button>
-                  </div>
-                )}
               </div>
             ))}
           </div>
         )}
       </div>
-    </DashboardLayout>
+    </div>
   );
 }
