@@ -213,17 +213,20 @@ farmer-marketplace/
 - [x] Active/inactive product status
 - [x] Orders page (placeholder)
 
-### 🔄 Phase 3: Consumer Marketplace (NEXT)
-- [ ] Browse products with filters
-- [ ] Location-based farmer discovery
-- [ ] Product detail pages with photos
-- [ ] Shopping cart
-- [ ] Photo upload for products
-- [ ] Mapbox integration for location picker
+### ✅ Phase 3: Consumer Marketplace (CORE COMPLETE)
+- [x] Browse products with filters
+- [x] Search and advanced filtering
+- [x] Product detail pages
+- [x] Shopping cart with persistence
+- [x] Platform fee calculation (10%)
+- [ ] Photo upload for products (optional)
+- [ ] Mapbox integration (optional)
+- [ ] Consumer profile page (optional)
 
-### 📅 Phase 4: Orders
+### 🔄 Phase 4: Orders (NEXT)
 - [ ] Checkout flow
-- [ ] Order status management
+- [ ] Order creation and management
+- [ ] Order status tracking
 - [ ] Email/SMS notifications
 - [ ] Order history
 
@@ -257,31 +260,40 @@ Farmers can toggle language in settings. Product names/descriptions can be enter
 
 ## 📸 Screenshots
 
-### Farmer Dashboard
+### Farmer Dashboard (Phase 2)
 - Dashboard with product stats and quick actions
 - Product management with grid view
 - Bilingual forms (English/Hindi)
 - Profile editor with delivery settings
+- Language toggle in header
 
-### Language Support
-- Instant language toggle in header
-- All UI elements translated
-- Hindi product names and descriptions
-- Devanagari font rendering
+### Consumer Marketplace (Phase 3)
+- Product browsing with search and filters
+- Product detail pages with farmer info
+- Shopping cart with order summary
+- Platform fee breakdown (10%)
+- Responsive design
 
-## 🧪 Testing Phase 2
+## 🧪 Testing
 
-### Login as Farmer
+### Test as Farmer
 1. Start servers: `npm run dev`
 2. Go to http://localhost:5173
 3. Enter any phone number
 4. Get OTP from backend console
 5. Select "Farmer" role
-6. Test features:
-   - Add products (try Hindi text!)
-   - Edit profile
-   - Toggle language
-   - View dashboard stats
+6. Add products with various categories and prices
+7. Test bilingual UI (toggle language)
+
+### Test as Consumer
+1. Logout and login again
+2. Select "Consumer" role
+3. Browse marketplace
+4. Use search and filters
+5. View product details
+6. Add items to cart
+7. Update quantities
+8. View order summary
 
 ## 📊 API Endpoints
 
@@ -302,6 +314,16 @@ Farmers can toggle language in settings. Product names/descriptions can be enter
 - `DELETE /api/products/:id` - Delete product
 - `GET /api/products/categories/all` - Get categories
 
+### Consumer (Phase 3)
+- `GET /api/consumer/profile` - Get consumer profile
+- `PUT /api/consumer/profile` - Update profile
+
+### Marketplace (Phase 3)
+- `GET /api/marketplace` - Browse products (with filters)
+  - Query params: `search`, `category_id`, `is_organic`, `min_price`, `max_price`, `latitude`, `longitude`, `max_distance_km`, `sort`, `order`
+- `GET /api/marketplace/:id` - Get product detail with farmer info
+- `GET /api/marketplace/farmer/:farmerId` - Get farmer's products
+
 ## 📝 License
 
 MIT
@@ -312,6 +334,6 @@ Contributions welcome! This is a learning/demo project.
 
 ---
 
-**Current Status:** Phase 2 (Farmer Dashboard) complete ✅  
-**Next:** Phase 3 - Consumer Marketplace  
+**Current Status:** Phase 3 Core Complete ✅  
+**Next:** Phase 4 - Orders & Checkout  
 **Last Updated:** 2026-09-07
