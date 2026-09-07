@@ -46,4 +46,11 @@ export const ordersAPI = {
   updateStatus: (id, data) => api.patch(`/orders/${id}/status`, data),
 };
 
+// Payments API
+export const paymentsAPI = {
+  createOrder: (orderId) => api.post('/payments/create-order', { orderId }),
+  verifyPayment: (data) => api.post('/payments/verify', data),
+  getPaymentStatus: (orderId) => api.get(`/payments/${orderId}/status`),
+};
+
 export default api;

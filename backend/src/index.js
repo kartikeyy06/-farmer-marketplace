@@ -9,6 +9,7 @@ import productsRoutes from './routes/products.js';
 import consumerRoutes from './routes/consumer.js';
 import marketplaceRoutes from './routes/marketplace.js';
 import ordersRoutes from './routes/orders.js';
+import paymentsRoutes from './routes/payments.js';
 
 dotenv.config();
 
@@ -37,9 +38,12 @@ const otpLimiter = rateLimit({
   message: { error: 'Too many OTP requests. Please try again later.' }
 });
 
-// Body parsing
+// Body parsing (JSON)
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+
+// Razorpay webhook needs raw body for signature verification
+// This is handled in the payments route itself
 
 // Health check
 app.get('/health', (req, res) => {
@@ -53,6 +57,7 @@ app.use('/api/products', productsRoutes);
 app.use('/api/consumer', consumerRoutes);
 app.use('/api/marketplace', marketplaceRoutes);
 app.use('/api/orders', ordersRoutes);
+app.use('/api/payments', paymentsRoutes);
 
 // Error handling
 app.use((err, req, res, next) => {

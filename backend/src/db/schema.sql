@@ -43,8 +43,8 @@ CREATE TABLE farmer_profiles (
   supports_pickup BOOLEAN DEFAULT TRUE,
   supports_delivery BOOLEAN DEFAULT TRUE,
   preferred_language VARCHAR(10) DEFAULT 'en' CHECK (preferred_language IN ('en', 'hi')),
-  stripe_account_id VARCHAR(255),
-  stripe_onboarded BOOLEAN DEFAULT FALSE,
+  razorpay_account_id VARCHAR(255),
+  razorpay_onboarded BOOLEAN DEFAULT FALSE,
   created_at TIMESTAMP DEFAULT NOW(),
   updated_at TIMESTAMP DEFAULT NOW()
 );
@@ -123,7 +123,9 @@ CREATE TABLE orders (
   subtotal DECIMAL(10, 2) NOT NULL,
   platform_fee DECIMAL(10, 2) NOT NULL,
   total DECIMAL(10, 2) NOT NULL,
-  stripe_payment_intent_id VARCHAR(255),
+  razorpay_order_id VARCHAR(255),
+  razorpay_payment_id VARCHAR(255),
+  payment_status VARCHAR(20) DEFAULT 'pending' CHECK (payment_status IN ('pending', 'captured', 'failed', 'refunded')),
   notes TEXT,
   cancelled_reason TEXT,
   created_at TIMESTAMP DEFAULT NOW(),

@@ -45,6 +45,7 @@ const resources = {
       farmName: 'Farm Name',
       bio: 'Bio',
       location: 'Location',
+      address: 'Address',
       deliveryRadius: 'Delivery Radius (km)',
       supportsPickup: 'Supports Pickup',
       supportsDelivery: 'Supports Delivery',
@@ -159,6 +160,10 @@ const resources = {
       yourEarnings: 'Your Earnings',
       active: 'Active',
       orderTimeline: 'Order Timeline',
+      pending: 'Payment Pending',
+      captured: 'Payment Received',
+      failed: 'Payment Failed',
+      refunded: 'Refunded',
 
       // Checkout
       checkout: 'Checkout',
@@ -172,6 +177,12 @@ const resources = {
       placeOrder: 'Place Order',
       paymentNote: 'Payment on delivery/pickup',
       notes: 'Notes',
+      payWithUpi: 'Pay with UPI / Card',
+      processing: 'Processing...',
+      securePayment: 'Secure payment via Razorpay',
+      paymentSuccess: 'Payment successful! Your order is confirmed.',
+      paymentFailed: 'Payment failed. Please try again.',
+      paymentVerificationFailed: 'Payment verification failed. Please check your order status.',
 
       // Units
       kg: 'kg',
@@ -235,6 +246,7 @@ const resources = {
       farmName: 'खेत का नाम',
       bio: 'परिचय',
       location: 'स्थान',
+      address: 'पता',
       deliveryRadius: 'डिलीवरी त्रिज्या (किमी)',
       supportsPickup: 'पिकअप समर्थित',
       supportsDelivery: 'डिलीवरी समर्थित',
@@ -349,6 +361,10 @@ const resources = {
       yourEarnings: 'आपकी कमाई',
       active: 'सक्रिय',
       orderTimeline: 'ऑर्डर टाइमलाइन',
+      pending: 'भुगतान लंबित',
+      captured: 'भुगतान प्राप्त',
+      failed: 'भुगतान विफल',
+      refunded: 'वापस किया गया',
 
       // Checkout
       checkout: 'चेकआउट',
@@ -362,6 +378,12 @@ const resources = {
       placeOrder: 'ऑर्डर दें',
       paymentNote: 'डिलीवरी/पिकअप पर भुगतान',
       notes: 'नोट्स',
+      payWithUpi: 'UPI / कार्ड से भुगतान करें',
+      processing: 'प्रक्रिया हो रही है...',
+      securePayment: 'Razorpay द्वारा सुरक्षित भुगतान',
+      paymentSuccess: 'भुगतान सफल! आपका ऑर्डर पुष्टि हो गया।',
+      paymentFailed: 'भुगतान विफल। कृपया पुनः प्रयास करें।',
+      paymentVerificationFailed: 'भुगतान सत्यापन विफल। कृपया अपना ऑर्डर स्थिति जांचें।',
 
       // Units
       kg: 'किलो',

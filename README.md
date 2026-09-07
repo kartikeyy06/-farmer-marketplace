@@ -30,7 +30,7 @@ A full-stack web application connecting farmers directly with consumers, featuri
 - **PostgreSQL** - Database
 - **JWT** - Authentication tokens
 - **Twilio** - SMS/OTP delivery
-- **Stripe** - Payment processing
+- **Razorpay** - UPI payments
 - **Helmet** - Security headers
 - **Rate limiting** - DDoS protection
 
@@ -39,7 +39,7 @@ A full-stack web application connecting farmers directly with consumers, featuri
 - Node.js 18+ and npm
 - PostgreSQL 14+
 - Twilio account (for SMS OTP)
-- Stripe account (for payments)
+- Razorpay account (for UPI payments)
 - Mapbox account (for maps)
 
 ## 🚀 Setup Instructions
@@ -74,7 +74,9 @@ JWT_SECRET=your-super-secret-jwt-key-change-this
 TWILIO_ACCOUNT_SID=your-twilio-account-sid
 TWILIO_AUTH_TOKEN=your-twilio-auth-token
 TWILIO_PHONE_NUMBER=+1234567890
-STRIPE_SECRET_KEY=sk_test_...
+RAZORPAY_KEY_ID=rzp_test_...
+RAZORPAY_KEY_SECRET=your-razorpay-key-secret
+RAZORPAY_WEBHOOK_SECRET=your-razorpay-webhook-secret
 MAPBOX_ACCESS_TOKEN=pk.ey...
 NODE_ENV=development
 PORT=3001
@@ -143,7 +145,8 @@ farmer-marketplace/
 │   │   │   ├── products.js       # Product CRUD
 │   │   │   ├── consumer.js       # Consumer profile
 │   │   │   ├── marketplace.js    # Marketplace browsing
-│   │   │   └── orders.js         # Order management
+│   │   │   ├── orders.js         # Order management
+│   │   │   └── payments.js       # Razorpay UPI payments
 │   │   ├── middleware/
 │   │   │   └── auth.js           # JWT middleware
 │   │   ├── utils/
@@ -236,6 +239,12 @@ farmer-marketplace/
 - `GET /api/orders/:id` - Get order detail
 - `PATCH /api/orders/:id/status` - Update order status
 
+### Payments (Phase 5)
+- `POST /api/payments/create-order` - Create Razorpay order
+- `POST /api/payments/verify` - Verify payment signature
+- `POST /api/payments/webhook` - Razorpay webhook handler
+- `GET /api/payments/:orderId/status` - Get payment status
+
 ## 🏗 Build Phases
 
 ### ✅ Phase 1: Foundation (COMPLETE)
@@ -272,10 +281,14 @@ farmer-marketplace/
 - [x] Order detail page with status timeline
 - [x] Email/SMS notifications (console in dev mode)
 
-### 📅 Phase 5: Payments
-- [ ] Stripe Connect farmer onboarding
-- [ ] Checkout with platform fee split
-- [ ] Payout management
+### ✅ Phase 5: Payments (COMPLETE)
+- [x] Razorpay integration (UPI, cards, netbanking)
+- [x] Razorpay checkout modal on frontend
+- [x] Payment signature verification
+- [x] Webhook handler for payment events
+- [x] Payment status tracking per order
+- [x] Order auto-confirms on successful payment
+- [x] Bilingual payment UI (English/Hindi)
 
 ### 📅 Phase 6: Reviews & Polish
 - [ ] Rating system
@@ -322,6 +335,12 @@ Farmers can toggle language in settings. Product names/descriptions can be enter
 - Order detail with timeline tracking
 - Farmer order management with actions
 
+### Razorpay Payments (Phase 5)
+- UPI payment via Razorpay checkout
+- Payment status tracking
+- Secure signature verification
+- Webhook-based confirmation
+
 ## 🧪 Testing
 
 ### Test as Farmer
@@ -355,6 +374,6 @@ Contributions welcome! This is a learning/demo project.
 
 ---
 
-**Current Status:** Phase 4 Complete ✅
-**Next:** Phase 5 - Stripe Connect Payments
+**Current Status:** Phase 5 Complete ✅
+**Next:** Phase 6 - Reviews & Polish
 **Last Updated:** 2026-09-06

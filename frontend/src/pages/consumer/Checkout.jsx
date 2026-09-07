@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { useCart } from '../../contexts/CartContext';
-import { consumerAPI, ordersAPI } from '../../services/api';
+import { consumerAPI, ordersAPI, paymentsAPI } from '../../services/api';
 
 export default function Checkout() {
   const { t } = useTranslation();
@@ -10,6 +10,7 @@ export default function Checkout() {
   const { cart, clearCart, getCartTotal, getPlatformFee, getGrandTotal } = useCart();
   const [profile, setProfile] = useState(null);
   const [loading, setLoading] = useState(false);
+  const [razorpayLoaded, setRazorpayLoaded] = useState(false);
   const [formData, setFormData] = useState({
     fulfillment_type: 'delivery',
     notes: ''
@@ -21,7 +22,23 @@ export default function Checkout() {
       return;
     }
     loadProfile();
+    loadRazorpayScript();
   }, []);
+
+  const loadRazorpayScript = () => {
+    if (window.Razorpay) {
+      setRazorpayLoaded(true);
+      return;
+    }
+    const script = document.createElement('script');
+    script.src = 'https://checkout.razorpay.com/v1/checkout.js';
+    script.onload = () => setRazorpayLoaded(true);
+    script.onerror = () => {
+      console.error('Failed to load Razorpay script');
+      alert('Payment system failed to load. Please try again.');
+    };
+    document.body.appendChild(script);
+  };
 
   const loadProfile = async () => {
     try {
@@ -41,24 +58,74 @@ export default function Checkout() {
     setLoading(true);
 
     try {
+      // Step 1: Create order on our backend
       const orderItems = cart.map(item => ({
         productId: item.id,
         quantity: item.quantity
       }));
 
-      const { data } = await ordersAPI.create({
+      const { data: orderData } = await ordersAPI.create({
         items: orderItems,
         fulfillment_type: formData.fulfillment_type,
         notes: formData.notes
       });
 
-      clearCart();
-      alert(t('orderPlacedSuccess'));
-      navigate('/consumer/orders');
+      const createdOrder = orderData.orders[0];
+
+      // Step 2: Create Razorpay order
+      const { data: razorpayData } = await paymentsAPI.createOrder(createdOrder.id);
+
+      // Step 3: Open Razorpay checkout
+      const options = {
+        key: razorpayData.keyId,
+        amount: razorpayData.amount,
+        currency: razorpayData.currency,
+        name: '🌾 Farmer Marketplace',
+        description: `Order #${createdOrder.order_number}`,
+        order_id: razorpayData.razorpayOrderId,
+        prefill: {
+          name: razorpayData.consumerName,
+          contact: razorpayData.consumerPhone,
+        },
+        theme: {
+          color: '#16a34a', // green-600
+        },
+        handler: async function (response) {
+          // Payment successful - verify on backend
+          try {
+            await paymentsAPI.verifyPayment({
+              razorpay_order_id: response.razorpay_order_id,
+              razorpay_payment_id: response.razorpay_payment_id,
+              razorpay_signature: response.razorpay_signature,
+              orderId: createdOrder.id,
+            });
+
+            clearCart();
+            alert(t('paymentSuccess'));
+            navigate(`/consumer/orders/${createdOrder.id}`);
+          } catch (error) {
+            console.error('Payment verification failed:', error);
+            alert(t('paymentVerificationFailed'));
+            navigate(`/consumer/orders/${createdOrder.id}`);
+          }
+        },
+        modal: {
+          ondismiss: function () {
+            // User closed the payment popup
+            setLoading(false);
+          }
+        }
+      };
+
+      const razorpay = new window.Razorpay(options);
+      razorpay.on('payment.failed', function (response) {
+        alert(t('paymentFailed'));
+        setLoading(false);
+      });
+      razorpay.open();
     } catch (error) {
       console.error('Failed to place order:', error);
       alert(error.response?.data?.error || t('orderPlaceFailed'));
-    } finally {
       setLoading(false);
     }
   };
@@ -225,15 +292,21 @@ export default function Checkout() {
 
               <button
                 onClick={handlePlaceOrder}
-                disabled={loading || !profile.address}
+                disabled={loading || !profile.address || !razorpayLoaded}
                 className="w-full mt-6 px-6 py-3 bg-green-600 text-white rounded-lg font-semibold hover:bg-green-700 transition disabled:bg-gray-400"
               >
-                {loading ? t('loading') : t('placeOrder')}
+                {loading ? t('processing') : t('payWithUpi')}
               </button>
 
-              <p className="mt-4 text-xs text-center text-gray-600">
-                {t('paymentNote')}
-              </p>
+              <div className="mt-4 flex items-center justify-center gap-2 text-sm text-gray-600">
+                <span>🔒</span>
+                <span>{t('securePayment')}</span>
+              </div>
+
+              <div className="mt-2 flex items-center justify-center gap-2">
+                <span className="text-xs text-gray-500">Powered by</span>
+                <span className="text-xs font-semibold text-blue-600">Razorpay</span>
+              </div>
             </div>
           </div>
         </div>

@@ -128,6 +128,17 @@ export default function OrderDetail() {
           <span className="text-sm text-gray-500">
             {new Date(order.created_at).toLocaleString()}
           </span>
+          {order.payment_status && (
+            <span className={`px-3 py-1 rounded-full text-xs font-semibold ${
+              order.payment_status === 'captured'
+                ? 'bg-green-100 text-green-700'
+                : order.payment_status === 'failed'
+                ? 'bg-red-100 text-red-700'
+                : 'bg-yellow-100 text-yellow-700'
+            }`}>
+              💳 {t(order.payment_status)}
+            </span>
+          )}
         </div>
 
         {/* Status Timeline */}
