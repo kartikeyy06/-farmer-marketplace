@@ -203,17 +203,23 @@ farmer-marketplace/
 - [x] i18next setup with English/Hindi
 - [x] Auth context and API client
 
-### 🔄 Phase 2: Farmer Dashboard (NEXT)
-- [ ] Farmer profile management (bilingual forms)
-- [ ] Product CRUD with photo uploads
-- [ ] Set delivery/pickup radius on map
-- [ ] Language toggle (English ⇄ Hindi)
+### ✅ Phase 2: Farmer Dashboard (COMPLETE)
+- [x] Farmer profile management (bilingual forms)
+- [x] Product CRUD operations
+- [x] Language toggle (English ⇄ Hindi)
+- [x] Dashboard with stats and quick actions
+- [x] Category management (bilingual)
+- [x] Delivery radius configuration
+- [x] Active/inactive product status
+- [x] Orders page (placeholder)
 
-### 📅 Phase 3: Consumer Marketplace
+### 🔄 Phase 3: Consumer Marketplace (NEXT)
 - [ ] Browse products with filters
 - [ ] Location-based farmer discovery
-- [ ] Product detail pages
+- [ ] Product detail pages with photos
 - [ ] Shopping cart
+- [ ] Photo upload for products
+- [ ] Mapbox integration for location picker
 
 ### 📅 Phase 4: Orders
 - [ ] Checkout flow
@@ -249,6 +255,53 @@ The farmer-facing UI supports:
 
 Farmers can toggle language in settings. Product names/descriptions can be entered in Hindi.
 
+## 📸 Screenshots
+
+### Farmer Dashboard
+- Dashboard with product stats and quick actions
+- Product management with grid view
+- Bilingual forms (English/Hindi)
+- Profile editor with delivery settings
+
+### Language Support
+- Instant language toggle in header
+- All UI elements translated
+- Hindi product names and descriptions
+- Devanagari font rendering
+
+## 🧪 Testing Phase 2
+
+### Login as Farmer
+1. Start servers: `npm run dev`
+2. Go to http://localhost:5173
+3. Enter any phone number
+4. Get OTP from backend console
+5. Select "Farmer" role
+6. Test features:
+   - Add products (try Hindi text!)
+   - Edit profile
+   - Toggle language
+   - View dashboard stats
+
+## 📊 API Endpoints
+
+### Authentication
+- `POST /api/auth/request-otp` - Send OTP
+- `POST /api/auth/verify-otp` - Verify OTP and login/register
+- `GET /api/auth/me` - Get current user
+
+### Farmer (Phase 2)
+- `GET /api/farmer/profile` - Get farmer profile
+- `PUT /api/farmer/profile` - Update profile
+
+### Products (Phase 2)
+- `GET /api/products` - List farmer's products
+- `GET /api/products/:id` - Get product details
+- `POST /api/products` - Create product
+- `PUT /api/products/:id` - Update product
+- `DELETE /api/products/:id` - Delete product
+- `GET /api/products/categories/all` - Get categories
+
 ## 📝 License
 
 MIT
@@ -259,4 +312,6 @@ Contributions welcome! This is a learning/demo project.
 
 ---
 
-**Current Status:** Phase 1 (Foundation) complete. Ready to test OTP auth flow and proceed to Phase 2 (Farmer Dashboard).
+**Current Status:** Phase 2 (Farmer Dashboard) complete ✅  
+**Next:** Phase 3 - Consumer Marketplace  
+**Last Updated:** 2026-09-07
