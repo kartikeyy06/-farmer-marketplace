@@ -6,6 +6,8 @@ import rateLimit from 'express-rate-limit';
 import authRoutes from './routes/auth.js';
 import farmerRoutes from './routes/farmer.js';
 import productsRoutes from './routes/products.js';
+import consumerRoutes from './routes/consumer.js';
+import marketplaceRoutes from './routes/marketplace.js';
 
 dotenv.config();
 
@@ -47,6 +49,8 @@ app.get('/health', (req, res) => {
 app.use('/api/auth', otpLimiter, authRoutes);
 app.use('/api/farmer', farmerRoutes);
 app.use('/api/products', productsRoutes);
+app.use('/api/consumer', consumerRoutes);
+app.use('/api/marketplace', marketplaceRoutes);
 
 // Error handling
 app.use((err, req, res, next) => {

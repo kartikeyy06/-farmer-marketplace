@@ -24,4 +24,17 @@ export const productsAPI = {
   getCategories: () => api.get('/products/categories/all'),
 };
 
+// Consumer API
+export const consumerAPI = {
+  getProfile: () => api.get('/consumer/profile'),
+  updateProfile: (data) => api.put('/consumer/profile', data),
+};
+
+// Marketplace API
+export const marketplaceAPI = {
+  getProducts: (params) => api.get('/marketplace', { params }),
+  getProductById: (id) => api.get(`/marketplace/${id}`),
+  getFarmerProducts: (farmerId) => api.get(`/marketplace/farmer/${farmerId}`),
+};
+
 export default api;

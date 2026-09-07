@@ -1,5 +1,6 @@
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { AuthProvider } from './contexts/AuthContext';
+import { CartProvider } from './contexts/CartContext';
 import ProtectedRoute from './components/ProtectedRoute';
 import Login from './pages/Login';
 import FarmerDashboard from './pages/farmer/Dashboard';
@@ -7,13 +8,11 @@ import FarmerProfile from './pages/farmer/Profile';
 import ProductsList from './pages/farmer/ProductsList';
 import ProductForm from './pages/farmer/ProductForm';
 import FarmerOrders from './pages/farmer/Orders';
+import Marketplace from './pages/consumer/Marketplace';
+import ProductDetail from './pages/consumer/ProductDetail';
+import Cart from './pages/consumer/Cart';
 import './i18n';
 import './index.css';
-
-// Placeholder components
-function ConsumerMarketplace() {
-  return <div className="p-8">Consumer Marketplace (Coming in Phase 3)</div>;
-}
 
 function Home() {
   return (
@@ -36,72 +35,98 @@ export default function App() {
   return (
     <BrowserRouter>
       <AuthProvider>
-        <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="/login" element={<Login />} />
+        <CartProvider>
+          <Routes>
+            <Route path="/" element={<Home />} />
+            <Route path="/login" element={<Login />} />
 
-          {/* Farmer Routes */}
-          <Route
-            path="/farmer/dashboard"
-            element={
-              <ProtectedRoute allowedRoles={['farmer']}>
-                <FarmerDashboard />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="/farmer/profile"
-            element={
-              <ProtectedRoute allowedRoles={['farmer']}>
-                <FarmerProfile />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="/farmer/products"
-            element={
-              <ProtectedRoute allowedRoles={['farmer']}>
-                <ProductsList />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="/farmer/products/new"
-            element={
-              <ProtectedRoute allowedRoles={['farmer']}>
-                <ProductForm />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="/farmer/products/edit/:id"
-            element={
-              <ProtectedRoute allowedRoles={['farmer']}>
-                <ProductForm />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="/farmer/orders"
-            element={
-              <ProtectedRoute allowedRoles={['farmer']}>
-                <FarmerOrders />
-              </ProtectedRoute>
-            }
-          />
+            {/* Farmer Routes */}
+            <Route
+              path="/farmer/dashboard"
+              element={
+                <ProtectedRoute allowedRoles={['farmer']}>
+                  <FarmerDashboard />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/farmer/profile"
+              element={
+                <ProtectedRoute allowedRoles={['farmer']}>
+                  <FarmerProfile />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/farmer/products"
+              element={
+                <ProtectedRoute allowedRoles={['farmer']}>
+                  <ProductsList />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/farmer/products/new"
+              element={
+                <ProtectedRoute allowedRoles={['farmer']}>
+                  <ProductForm />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/farmer/products/edit/:id"
+              element={
+                <ProtectedRoute allowedRoles={['farmer']}>
+                  <ProductForm />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/farmer/orders"
+              element={
+                <ProtectedRoute allowedRoles={['farmer']}>
+                  <FarmerOrders />
+                </ProtectedRoute>
+              }
+            />
 
-          {/* Consumer Routes */}
-          <Route
-            path="/marketplace"
-            element={
-              <ProtectedRoute allowedRoles={['consumer']}>
-                <ConsumerMarketplace />
-              </ProtectedRoute>
-            }
-          />
+            {/* Consumer Routes */}
+            <Route
+              path="/marketplace"
+              element={
+                <ProtectedRoute allowedRoles={['consumer']}>
+                  <Marketplace />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/product/:id"
+              element={
+                <ProtectedRoute allowedRoles={['consumer']}>
+                  <ProductDetail />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/cart"
+              element={
+                <ProtectedRoute allowedRoles={['consumer']}>
+                  <Cart />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/checkout"
+              element={
+                <ProtectedRoute allowedRoles={['consumer']}>
+                  <div className="p-8 text-center">Checkout (Phase 4)</div>
+                </ProtectedRoute>
+              }
+            />
 
-          <Route path="*" element={<Navigate to="/" replace />} />
-        </Routes>
+            <Route path="*" element={<Navigate to="/" replace />} />
+          </Routes>
+        </CartProvider>
       </AuthProvider>
     </BrowserRouter>
   );
