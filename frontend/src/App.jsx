@@ -2,14 +2,15 @@ import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { AuthProvider } from './contexts/AuthContext';
 import ProtectedRoute from './components/ProtectedRoute';
 import Login from './pages/Login';
+import FarmerDashboard from './pages/farmer/Dashboard';
+import FarmerProfile from './pages/farmer/Profile';
+import ProductsList from './pages/farmer/ProductsList';
+import ProductForm from './pages/farmer/ProductForm';
+import FarmerOrders from './pages/farmer/Orders';
 import './i18n';
 import './index.css';
 
 // Placeholder components
-function FarmerDashboard() {
-  return <div className="p-8">Farmer Dashboard (Coming in Phase 2)</div>;
-}
-
 function ConsumerMarketplace() {
   return <div className="p-8">Consumer Marketplace (Coming in Phase 3)</div>;
 }
@@ -39,6 +40,7 @@ export default function App() {
           <Route path="/" element={<Home />} />
           <Route path="/login" element={<Login />} />
 
+          {/* Farmer Routes */}
           <Route
             path="/farmer/dashboard"
             element={
@@ -47,7 +49,48 @@ export default function App() {
               </ProtectedRoute>
             }
           />
+          <Route
+            path="/farmer/profile"
+            element={
+              <ProtectedRoute allowedRoles={['farmer']}>
+                <FarmerProfile />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/farmer/products"
+            element={
+              <ProtectedRoute allowedRoles={['farmer']}>
+                <ProductsList />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/farmer/products/new"
+            element={
+              <ProtectedRoute allowedRoles={['farmer']}>
+                <ProductForm />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/farmer/products/edit/:id"
+            element={
+              <ProtectedRoute allowedRoles={['farmer']}>
+                <ProductForm />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/farmer/orders"
+            element={
+              <ProtectedRoute allowedRoles={['farmer']}>
+                <FarmerOrders />
+              </ProtectedRoute>
+            }
+          />
 
+          {/* Consumer Routes */}
           <Route
             path="/marketplace"
             element={

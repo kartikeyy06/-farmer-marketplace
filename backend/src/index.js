@@ -4,6 +4,8 @@ import helmet from 'helmet';
 import dotenv from 'dotenv';
 import rateLimit from 'express-rate-limit';
 import authRoutes from './routes/auth.js';
+import farmerRoutes from './routes/farmer.js';
+import productsRoutes from './routes/products.js';
 
 dotenv.config();
 
@@ -43,6 +45,8 @@ app.get('/health', (req, res) => {
 
 // Routes
 app.use('/api/auth', otpLimiter, authRoutes);
+app.use('/api/farmer', farmerRoutes);
+app.use('/api/products', productsRoutes);
 
 // Error handling
 app.use((err, req, res, next) => {

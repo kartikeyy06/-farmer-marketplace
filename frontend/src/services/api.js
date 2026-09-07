@@ -1,40 +1,4 @@
-import axios from 'axios';
-
-const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3001';
-
-const api = axios.create({
-  baseURL: `${API_URL}/api`,
-  headers: {
-    'Content-Type': 'application/json'
-  }
-});
-
-// Request interceptor to add auth token
-api.interceptors.request.use(
-  (config) => {
-    const token = localStorage.getItem('token');
-    if (token) {
-      config.headers.Authorization = `Bearer ${token}`;
-    }
-    return config;
-  },
-  (error) => {
-    return Promise.reject(error);
-  }
-);
-
-// Response interceptor for error handling
-api.interceptors.response.use(
-  (response) => response,
-  (error) => {
-    if (error.response?.status === 401) {
-      localStorage.removeItem('token');
-      localStorage.removeItem('user');
-      window.location.href = '/login';
-    }
-    return Promise.reject(error);
-  }
-);
+import api from './apiClient';
 
 // Auth API
 export const authAPI = {
@@ -42,6 +6,22 @@ export const authAPI = {
   verifyOTP: (phoneNumber, otp, role, name) =>
     api.post('/auth/verify-otp', { phoneNumber, otp, role, name }),
   getCurrentUser: () => api.get('/auth/me'),
+};
+
+// Farmer API
+export const farmerAPI = {
+  getProfile: () => api.get('/farmer/profile'),
+  updateProfile: (data) => api.put('/farmer/profile', data),
+};
+
+// Products API
+export const productsAPI = {
+  getAll: () => api.get('/products'),
+  getById: (id) => api.get(`/products/${id}`),
+  create: (data) => api.post('/products', data),
+  update: (id, data) => api.put(`/products/${id}`, data),
+  delete: (id) => api.delete(`/products/${id}`),
+  getCategories: () => api.get('/products/categories/all'),
 };
 
 export default api;
